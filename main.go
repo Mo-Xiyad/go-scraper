@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"time"
 
@@ -39,4 +41,20 @@ func main() {
 
 	log.Printf("provider name: %s, provider address: %s", providerName, providerAddress)
 
+	data := map[string]string{
+		"providerName":    providerName,
+		"providerAddress": providerAddress,
+	}
+
+	jsonData, err := json.MarshalIndent(data, "", "    ")
+	if err != nil {
+		log.Fatalf("marshal data failed : %v", err)
+	}
+
+	err = ioutil.WriteFile("output.json", jsonData, 0644)
+	if err != nil {
+		log.Fatalf("failed to write file: %v", err)
+	}
+
+	log.Println("completed successfully!")
 }
